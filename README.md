@@ -187,17 +187,6 @@ The script will automatically:
 - Set up Istio gateway
 
 
-```bash
-kubectl -n istio-system patch svc kiali       -p '{"spec":{"type":"LoadBalancer"}}'
-kubectl -n istio-system patch svc grafana     -p '{"spec":{"type":"LoadBalancer"}}'
-kubectl -n istio-system patch svc prometheus  -p '{"spec":{"type":"LoadBalancer"}}'
-kubectl -n istio-system patch svc tracing     -p '{"spec":{"type":"LoadBalancer"}}'
-
-```
-
-Configure kubectl:
-```bash
-az aks get-credentials --resource-group aks-istio-rg --name aks-istio-cluster --overwrite-existing
 ```
 
 Verify cluster:
@@ -206,52 +195,16 @@ kubectl get nodes
 kubectl get ns
 ```
 
-### Step 2: Install Istio 1.27.1
-
-Download Istio:
 ```bash
-curl -L https://github.com/istio/istio/releases/download/1.27.1/istio-1.27.1-linux-amd64.tar.gz -o istio-1.27.1-linux-amd64.tar.gz
-tar -xzf istio-1.27.1-linux-amd64.tar.gz
-cd istio-1.27.1
-```
+kubectl -n istio-system patch svc kiali       -p '{"spec":{"type":"LoadBalancer"}}'
+kubectl -n istio-system patch svc grafana     -p '{"spec":{"type":"LoadBalancer"}}'
+kubectl -n istio-system patch svc prometheus  -p '{"spec":{"type":"LoadBalancer"}}'
+kubectl -n istio-system patch svc tracing     -p '{"spec":{"type":"LoadBalancer"}}'
 
-Add istioctl to PATH:
-```bash
-export PATH=$PWD/bin:$PATH
-```
-
-Verify installation:
-```bash
-istioctl version
-```
 
 Install Istio with demo profile:
 ```bash
 istioctl install --set profile=demo -y
-```
-
-### Step 3: Enable Istio Sidecar Injection
-
-Create namespace:
-```bash
-kubectl create namespace myapp --dry-run=client -o yaml | kubectl apply -f -
-```
-
-Enable automatic sidecar injection:
-```bash
-kubectl label namespace myapp istio-injection=enabled --overwrite
-```
-
-Verify injection is enabled:
-```bash
-kubectl get namespace -L istio-injection
-```
-
-### Step 4: Deploy Bookinfo Application
-
-Deploy the application:
-```bash
-kubectl apply -n myapp -f https://raw.githubusercontent.com/istio/istio/release-1.27/samples/bookinfo/platform/kube/bookinfo.yaml
 ```
 
 Scale deployments:
