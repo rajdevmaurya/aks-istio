@@ -1,18 +1,6 @@
 # AKS + Istio 1.27.1 Demo Deployment
 
-Complete guide for setting up Azure Kubernetes Service (AKS) with Istio 1.27.1, deploying the Bookinfo sample application, and configuring Istio observability dashboards.
-
-## 📋 Prerequisites
-
-Before starting, ensure you have:
-
-- **Azure CLI** installed and logged in
-- **kubectl** installed and configured
-- **Bash shell** (Linux, macOS, or Git Bash for Windows)
-- **Internet access** for downloading Istio and sample application manifests
-- **Azure subscription** with appropriate permissions
-
-## 🔧 Configuration Variables
+## 🔧 script
 
 ```bash
 #!/bin/bash
@@ -35,7 +23,7 @@ NODE_SIZE="Standard_B2s"
 NAMESPACE="myapp"
 MAX_PODS=2
 K8S_VERSION="1.32.7"   # Supported version in eastus
-ISTIO_VERSION="1.27.1"  # ✅ Verified stable version
+ISTIO_VERSION="1.27.1"  #  Verified stable version
 
 # Derive branch name automatically (major.minor)
 ISTIO_MAJOR_MINOR="${ISTIO_VERSION%%.*}.${ISTIO_VERSION#*.}"
@@ -86,7 +74,7 @@ az aks create \
 # Configure kubectl
 # -----------------------------
 az aks get-credentials --resource-group $RESOURCE_GROUP --name $AKS_CLUSTER --overwrite-existing
-kubectl get nodes || { echo "❌ kubectl cannot connect to AKS cluster"; exit 1; }
+kubectl get nodes || { echo "kubectl cannot connect to AKS cluster"; exit 1; }
 
 # -----------------------------
 # Install Istio (Cross-platform Safe)
@@ -105,7 +93,7 @@ fi
 
 curl -L "$ISTIO_URL" -o "$ISTIO_TGZ"
 if [ $? -ne 0 ]; then
-    echo "❌ Failed to download Istio ${ISTIO_VERSION}."
+    echo "Failed to download Istio ${ISTIO_VERSION}."
     exit 1
 fi
 
@@ -116,7 +104,7 @@ else
     tar -xzf "$ISTIO_TGZ"
 fi
 
-cd "istio-${ISTIO_VERSION}" || { echo "❌ Failed to enter Istio directory"; exit 1; }
+cd "istio-${ISTIO_VERSION}" || { echo "Failed to enter Istio directory"; exit 1; }
 
 # Add istioctl to PATH (handles Windows or Linux)
 if [[ "$OS_TYPE" == *"mingw"* || "$OS_TYPE" == *"msys"* || "$OS_TYPE" == *"cygwin"* ]]; then
@@ -126,7 +114,7 @@ else
 fi
 
 echo "Verifying Istio CLI..."
-istioctl version --remote=false || { echo "❌ istioctl failed to run"; exit 1; }
+istioctl version --remote=false || { echo "istioctl failed to run"; exit 1; }
 
 echo "Installing Istio demo profile..."
 istioctl install --set profile=demo -y
@@ -143,7 +131,7 @@ kubectl get namespace -L istio-injection
 # -----------------------------
 echo "Deploying Bookinfo sample application..."
 BOOKINFO_PLATFORM_YAML="https://raw.githubusercontent.com/istio/istio/release-1.27/samples/bookinfo/platform/kube/bookinfo.yaml"
-kubectl apply -n $NAMESPACE -f "$BOOKINFO_PLATFORM_YAML" || { echo "❌ Failed to apply Bookinfo YAML"; exit 1; }
+kubectl apply -n $NAMESPACE -f "$BOOKINFO_PLATFORM_YAML" || { echo "Failed to apply Bookinfo YAML"; exit 1; }
 
 kubectl scale deployment productpage-v1 -n $NAMESPACE --replicas=$MAX_PODS || true
 kubectl scale deployment reviews-v1 -n $NAMESPACE --replicas=$MAX_PODS || true
@@ -163,8 +151,8 @@ for i in {1..30}; do
     EXTERNAL_IP=$(kubectl get svc istio-ingressgateway -n istio-system \
         --template="{{range .status.loadBalancer.ingress}}{{.ip}}{{end}}" 2>/dev/null)
     if [ -n "$EXTERNAL_IP" ]; then
-        echo "✅ Istio Ingress Gateway EXTERNAL-IP: $EXTERNAL_IP"
-        echo "🌐 Access Bookinfo: http://$EXTERNAL_IP/productpage"
+        echo "Istio Ingress Gateway EXTERNAL-IP: $EXTERNAL_IP"
+        echo "Access Bookinfo: http://$EXTERNAL_IP/productpage"
         break
     fi
     echo "Waiting for IP... ($i/30)"
@@ -172,7 +160,7 @@ for i in {1..30}; do
 done
 
 if [ -z "$EXTERNAL_IP" ]; then
-    echo "⚠️  Istio Ingress Gateway EXTERNAL-IP not assigned yet."
+    echo "Istio Ingress Gateway EXTERNAL-IP not assigned yet."
 fi
 
 echo "===== SETUP COMPLETE ====="
@@ -180,7 +168,7 @@ echo "Logs saved to $LOGFILE"
 
 ```
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Option 1: Automated Setup (Recommended)
 
@@ -308,8 +296,8 @@ Wait for external IP assignment:
 for i in {1..30}; do
   EXTERNAL_IP=$(kubectl get svc istio-ingressgateway -n istio-system --template="{{range .status.loadBalancer.ingress}}{{.ip}}{{end}}" 2>/dev/null)
   if [ -n "$EXTERNAL_IP" ]; then
-    echo "✅ Istio Ingress Gateway EXTERNAL-IP: $EXTERNAL_IP"
-    echo "🌐 Access Bookinfo: http://$EXTERNAL_IP/productpage"
+    echo "Istio Ingress Gateway EXTERNAL-IP: $EXTERNAL_IP"
+    echo "Access Bookinfo: http://$EXTERNAL_IP/productpage"
     break
   fi
   echo "Waiting for IP... ($i/30)"
@@ -375,7 +363,7 @@ kubectl get svc -n istio-system
 
 ---
 
-## 🌐 Accessing Dashboards
+## Accessing Dashboards
 
 Once external IPs are assigned, access the dashboards:
 
@@ -389,7 +377,7 @@ Once external IPs are assigned, access the dashboards:
 
 ---
 
-## 🔍 Troubleshooting
+## Troubleshooting
 
 ### Dashboard Not Accessible
 
@@ -435,7 +423,7 @@ Check Azure load balancer creation in the portal or CLI.
 
 ---
 
-## 🧹 Cleanup
+##Cleanup
 
 Delete the AKS cluster:
 ```bash
