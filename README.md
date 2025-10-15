@@ -186,32 +186,13 @@ The script will automatically:
 - Configure namespace injection
 - Set up Istio gateway
 
-### Option 2: Manual Step-by-Step Setup
 
-Follow the detailed steps below for manual installation.
-
----
-
-## 📖 Manual Installation Steps
-
-### Step 1: Create Azure Resources
-
-Create resource group:
 ```bash
-az group create --name aks-istio-rg --location eastus
-```
+kubectl -n istio-system patch svc kiali       -p '{"spec":{"type":"LoadBalancer"}}'
+kubectl -n istio-system patch svc grafana     -p '{"spec":{"type":"LoadBalancer"}}'
+kubectl -n istio-system patch svc prometheus  -p '{"spec":{"type":"LoadBalancer"}}'
+kubectl -n istio-system patch svc tracing     -p '{"spec":{"type":"LoadBalancer"}}'
 
-Create AKS cluster:
-```bash
-az aks create \
-    --resource-group aks-istio-rg \
-    --name aks-istio-cluster \
-    --node-count 1 \
-    --node-vm-size Standard_B2s \
-    --kubernetes-version 1.32.7 \
-    --generate-ssh-keys \
-    --enable-managed-identity \
-    --enable-addons monitoring
 ```
 
 Configure kubectl:
