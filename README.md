@@ -196,6 +196,14 @@ kubectl get ns
 ```
 
 ```bash
+
+ISTIO_RELEASE_BRANCH="release-1.27"
+
+kubectl apply -f https://raw.githubusercontent.com/istio/istio/${ISTIO_RELEASE_BRANCH}/samples/addons/kiali.yaml
+kubectl apply -f https://raw.githubusercontent.com/istio/istio/${ISTIO_RELEASE_BRANCH}/samples/addons/grafana.yaml
+kubectl apply -f https://raw.githubusercontent.com/istio/istio/${ISTIO_RELEASE_BRANCH}/samples/addons/prometheus.yaml
+kubectl apply -f https://raw.githubusercontent.com/istio/istio/${ISTIO_RELEASE_BRANCH}/samples/addons/jaeger.yaml
+
 kubectl -n istio-system patch svc kiali       -p '{"spec":{"type":"LoadBalancer"}}'
 kubectl -n istio-system patch svc grafana     -p '{"spec":{"type":"LoadBalancer"}}'
 kubectl -n istio-system patch svc prometheus  -p '{"spec":{"type":"LoadBalancer"}}'
