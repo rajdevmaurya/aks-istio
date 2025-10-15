@@ -15,3 +15,14 @@ Internet access for Istio and sample app YAMLs
 Step 1: Variables & Script Setup
 
 Key parameters:
+
+RESOURCE_GROUP="aks-istio-rg"
+AKS_CLUSTER="aks-istio-cluster"
+LOCATION="eastus"
+NODE_COUNT=1
+NODE_SIZE="Standard_B2s"
+NAMESPACE="myapp"
+MAX_PODS=2
+K8S_VERSION="1.32.7"
+ISTIO_VERSION="1.27.1"
+
