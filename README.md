@@ -21,10 +21,6 @@ The script will automatically:
 
 
 ```
-
-Verify cluster:
-```bash
-
 #!/bin/bash
 #
 # AKS + Istio setup with Istio native monitoring (Kiali, Grafana, Prometheus, Jaeger)
